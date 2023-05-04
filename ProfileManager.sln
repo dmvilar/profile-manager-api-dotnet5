@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProfileManager.API", "ProfileManager\ProfileManager.API.csproj", "{79123162-9A7F-488E-8265-A116234F4678}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProfileManager.API", "ProfileManager.API\ProfileManager.API.csproj", "{79123162-9A7F-488E-8265-A116234F4678}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProfileManager.Domain", "ProfileManager.Domain\ProfileManager.Domain.csproj", "{3BF2A661-E566-4D1A-B891-6F9588B19905}"
 EndProject
