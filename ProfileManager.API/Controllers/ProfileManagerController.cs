@@ -27,9 +27,9 @@ namespace ProfileManager.Controllers
         }
 
         [HttpPost("/CreateProfile")]
-        public async Task CreateProfile(string Name, string LastName, string Skill, CancellationToken cancellationToken)
+        public async Task CreateProfile(string name, string lastName, string skill, CancellationToken cancellationToken)
         {
-            await _profileRepository.CreateProfileAsync(new Profile(Name, LastName, Skill), cancellationToken);
+            await _profileRepository.CreateProfileAsync(new Profile(name, lastName, skill), cancellationToken);
         }
 
         [HttpGet("/GetAll")]

@@ -35,8 +35,9 @@ namespace ProfileManager
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProfileManager", Version = "v1" });
             });
+
             services.AddSingleton(provider =>
-        new MongoDbContext(Configuration));
+                    new MongoDbContext(Configuration));
 
             services.AddScoped<IProfileRepository, ProfileRepository>();
         }
