@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using ProfileManager.Domain.Interfaces;
 using ProfileManager.Domain.Models;
 using System;
@@ -17,34 +18,45 @@ namespace ProfileManager.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task CreateProfileAsync(Profile people, CancellationToken cancellationToken)
+        public async Task CreateProfileAsync(Profile profile, CancellationToken cancellationToken)
         {
-            await _dbContext.Profile.InsertOneAsync(people, cancellationToken);
+            await _dbContext.Profile.InsertOneAsync(profile, null, cancellationToken);
         }
 
-        public Task DeleteProfileAsync(int id)
+        public async Task<bool> DeleteProfileAsync(Guid id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var filter = Builders<Profile>.Filter.Eq(p => p.Id, id);
+
+            var result = await _dbContext.Profile.DeleteOneAsync(filter);
+
+            return result.IsAcknowledged && result.DeletedCount > 0;
         }
 
-        public async Task<IEnumerable<Profile>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Profile>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await _dbContext.Profile.Find<Profile>(x => true).ToListAsync();
+            return await _dbContext.Profile.Find<Profile>(x => true).ToListAsync(cancellationToken);
+        }   
+
+        public async Task<Profile> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Profile.Find<Profile>(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
         }
 
-        public Task<Profile> GetByIdAsync(int id)
+        public async Task<IEnumerable<Profile>> GetBySkillAsync(string skill, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Profile.Find<Profile>(x => x.Skill.Equals(skill, StringComparison.CurrentCultureIgnoreCase)).ToListAsync(cancellationToken);
         }
 
-        public Task<IEnumerable<Profile>> GetBySkillAsync(string skill)
+        public async Task<bool> UpdateProfileAsync(Profile profile, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-        }
+            var filter = Builders<Profile>.Filter.Eq(p => p.Id, profile.Id);
+            var update = Builders<Profile>.Update
+                .Set(p => p.Name, profile.Name)
+                .Set(p => p.LastName, profile.LastName)
+                .Set(p => p.Skill, profile.Skill);
 
-        public Task UpdateProfileAsync(Profile people)
-        {
-            throw new NotImplementedException();
+            var result = await _dbContext.Profile.UpdateOneAsync(filter, update, null, cancellationToken);
+            return result.IsAcknowledged && result.ModifiedCount > 0;
         }
     }
 }

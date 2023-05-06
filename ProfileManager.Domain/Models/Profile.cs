@@ -4,12 +4,18 @@ using System;
 
 namespace ProfileManager.Domain.Models
 {
-    public class Profile
+    public sealed record Profile
     {
-        [BsonId]
-        public ObjectId Id { get; init; }
-        public string Name { get; set; }
-        public string LastName { get; set; }
-        public string Skill { get; set; }
+        public Guid Id { get; init; }
+        public string Name { get; init; }
+        public string LastName { get; init; }
+        public string Skill { get; init; }
+
+        public Profile(string name, string lastName, string skill)
+        {
+            this.Name = name;
+            this.LastName = lastName;
+            this.Skill = skill;
+        }
     }
 }

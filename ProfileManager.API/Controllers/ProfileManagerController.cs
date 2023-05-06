@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using ProfileManager.Domain.Models;
 using ProfileManager.Domain.Interfaces;
 using System.Threading;
+using MongoDB.Bson;
+using System.Net;
 
 namespace ProfileManager.Controllers
 {
@@ -25,17 +27,9 @@ namespace ProfileManager.Controllers
         }
 
         [HttpPost("/CreateProfile")]
-        public async Task CreateProfile(Profile profile, CancellationToken cancellationToken)
+        public async Task CreateProfile(string Name, string LastName, string Skill, CancellationToken cancellationToken)
         {
-            try
-            {
-                await _profileRepository.CreateProfileAsync(profile, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            await _profileRepository.CreateProfileAsync(new Profile(Name, LastName, Skill), cancellationToken);
         }
 
         [HttpGet("/GetAll")]
@@ -44,17 +38,28 @@ namespace ProfileManager.Controllers
             return await _profileRepository.GetAllAsync(cancellationToken);
         }
 
-        //[HttpGet]
-        //public Profile GetById()
-        //{
-        //    return new Profile();
-        //}
+        [HttpGet("/GetById")]
+        public async Task<Profile> GetById(Guid id, CancellationToken cancellationToken)
+        {
+            return await _profileRepository.GetByIdAsync(id, cancellationToken);
+        }
 
-        //[HttpGet]
-        //public IEnumerable<Profile> GetBySkill()
-        //{
-        //    return new[] { new Profile() };
-        //}
+        [HttpGet("/GetBySkill")]
+        public async Task<IEnumerable<Profile>> GetBySkill(string skill, CancellationToken cancellationToken)
+        {
+            return await _profileRepository.GetBySkillAsync(skill, cancellationToken);
+        }
 
+        [HttpDelete("/DeleteProfile")]
+        public async Task<bool> DeleteProfile(Guid id, CancellationToken cancellationToken)
+        {
+            return await _profileRepository.DeleteProfileAsync(id, cancellationToken);
+        }
+
+        [HttpPut("/UpdateProfile")]
+        public async Task<bool> UpdateProfile(Profile profile, CancellationToken cancellationToken)
+        {
+            return await _profileRepository.UpdateProfileAsync(profile, cancellationToken);
+        }
     }
 }
